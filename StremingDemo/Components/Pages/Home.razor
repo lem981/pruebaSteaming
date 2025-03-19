@@ -19,7 +19,8 @@
                     <img class="rounded-top img-fixed" src="@($"/api/videos/{video.Code}.jpg")" alt="placeholder" />
                     <CardBody>
                         <CardTitle>@video.Code</CardTitle>
-                        <Button Color="ButtonColor.Dark" @onclick="() => PlayVideo(video.Code)" Type="ButtonType.Link">Ver</Button>
+
+                        <Icon Name="IconName.PlayCircleFill" Size="IconSize.x3" Color="IconColor.Dark" @onclick="() => PlayVideo(video.Code)" class="clickable-icon" />
                     </CardBody>
                 </Card>
             </div>
