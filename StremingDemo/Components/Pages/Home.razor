@@ -10,7 +10,7 @@
         {
             <li>
                 <button @onclick="() => PlayVideo(video.Code)">
-                    @video.Name
+                    @video.Code
                 </button>
             </li>
         }
@@ -31,12 +31,6 @@
 
 
     public string currentVideo = string.Empty;
-
-    // public List<Video> videos = new()
-    // {
-    //     new Video { Title = "Sample Video 1", Url = "/api/videos/sample1.mp4" },
-    //     new Video { Title = "Sample Video 2", Url = "/api/videos/sample2.mp4" }
-    // };
 
     public void PlayVideo(string url)
     {

@@ -25,7 +25,7 @@ public class VideoController : ControllerBase
     [HttpGet("list")]
     public IActionResult GetVideos()
     {
-        var files = Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), _videoPath));
+        var files = Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), _videoPath), "*.mp4");
 
         List<Video> videos = new List<Video>();
 
