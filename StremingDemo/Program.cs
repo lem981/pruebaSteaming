@@ -9,6 +9,8 @@ builder.Services.AddControllers(); // Register controllers
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddBlazorBootstrap();
+
 
 var app = builder.Build();
 

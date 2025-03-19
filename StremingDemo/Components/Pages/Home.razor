@@ -3,18 +3,30 @@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 
-@if (videos is not null)
+@if (videos is not null && string.IsNullOrEmpty(currentVideo))
 {
-    <ul>
+    <div class="row">
         @foreach (var video in videos)
         {
-            <li>
+            @*             <li>
                 <button @onclick="() => PlayVideo(video.Code)">
                     @video.Name
                 </button>
-            </li>
+            </li> *@
+
+            <div class="col-sm-3">
+                <Card Class="mb-4" Style="width:18rem;">
+                    <img class="rounded-top img-fixed" src="@($"/api/videos/{video.Code}.jpg")" alt="placeholder" />
+                    <CardBody>
+                        <CardTitle>@video.Code</CardTitle>
+                        <Button Color="ButtonColor.Dark" @onclick="() => PlayVideo(video.Code)" Type="ButtonType.Link">Ver</Button>
+                    </CardBody>
+                </Card>
+            </div>
+
+
         }
-    </ul>
+    </div>
 }
 
 @if (!string.IsNullOrEmpty(currentVideo))

@@ -39,6 +39,7 @@ public class VideoController : ControllerBase
             videos.Add(video);
         }
 
+        videos = videos.OrderBy(v => v.Code).ToList();
 
         return Ok(videos);
     }
