@@ -10,7 +10,7 @@
         {
             <li>
                 <button @onclick="() => PlayVideo(video.Code)">
-                    @video.Code
+                    @video.Name
                 </button>
             </li>
         }
@@ -42,10 +42,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //call api
-        var httpClient = new HttpClient
+        // Ignore SSL certificate validation
+        var handler = new HttpClientHandler
             {
-                BaseAddress = new Uri(Navigation.BaseUri) 
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+            };
+
+        // Create HttpClient with custom handler
+        var httpClient = new HttpClient(handler)
+            {
+                BaseAddress = new Uri(Navigation.BaseUri)
             };
 
         videos = await httpClient.GetFromJsonAsync<List<Video>>("api/videos/list");
