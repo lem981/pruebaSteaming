@@ -6,7 +6,7 @@ builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(7157, listenOptions =>
     {
-        listenOptions.UseHttps("C:\\ProgramData\\certify\\assets\\minetflixilegal.duckdns.org\\20250616_976d6984.pfx", "");
+        listenOptions.UseHttps("20250616_976d6984.pfx", "");
     });
 });
 
