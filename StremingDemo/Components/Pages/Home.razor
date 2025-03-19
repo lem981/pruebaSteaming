@@ -47,6 +47,7 @@
     public void PlayVideo(string url)
     {
         currentVideo = url;
+        videos = null;
         InvokeAsync(StateHasChanged);
     }
 
