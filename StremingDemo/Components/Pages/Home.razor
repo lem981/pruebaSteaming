@@ -1,0 +1,62 @@
+﻿@page "/"
+@using StremingDemo.Models
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+@if (videos is not null)
+{
+    <ul>
+        @foreach (var video in videos)
+        {
+            <li>
+                <button @onclick="() => PlayVideo(video.Code)">
+                    @video.Name
+                </button>
+            </li>
+        }
+    </ul>
+}
+
+@if (!string.IsNullOrEmpty(currentVideo))
+{
+    <video controls width="600">
+        <source src="@($"/api/videos/{currentVideo}.mp4")" type="video/mp4">
+        <track src="@($"/api/videos/{currentVideo}.vtt")" kind="subtitles" srclang="es" label="Spanish">
+        Your browser does not support the video tag.
+    </video>
+}
+
+
+@code {
+
+
+    public string currentVideo = string.Empty;
+
+    // public List<Video> videos = new()
+    // {
+    //     new Video { Title = "Sample Video 1", Url = "/api/videos/sample1.mp4" },
+    //     new Video { Title = "Sample Video 2", Url = "/api/videos/sample2.mp4" }
+    // };
+
+    public void PlayVideo(string url)
+    {
+        currentVideo = url;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public List<Video> videos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //call api
+        var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(Navigation.BaseUri) 
+            };
+
+        videos = await httpClient.GetFromJsonAsync<List<Video>>("api/videos/list");
+
+
+    }
+
+}

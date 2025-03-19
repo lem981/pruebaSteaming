@@ -1,0 +1,9 @@
+wwwroot\app.css
+wwwroot\bootstrap\bootstrap.min.css
+wwwroot\bootstrap\bootstrap.min.css.map
+wwwroot\favicon.png
+wwwroot\videos\PingPongTheTriumph.mp4
+wwwroot\videos\PingPongTheTriumph.srt
+wwwroot\videos\TheWhiteLotuss01e01.mp4
+wwwroot\videos\TheWhiteLotuss01e01.srt
+wwwroot\videos\TheWhiteLotuss01e01.vtt
