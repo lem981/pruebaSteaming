@@ -73,6 +73,5 @@ h1:focus {
 video::cue {
     background: transparent; /* Removes the black background */
     color: white; /* Sets the text color */
-    font-size: 16px; /* Adjusts subtitle size */
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Adds shadow for visibility */
 }
