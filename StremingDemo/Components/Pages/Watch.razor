@@ -7,7 +7,7 @@
 {
     <video controls class="w-100" autoplay>
         <source src="@($"/api/videos/{currentVideo}.mp4")" type="video/mp4">
-        <track src="@($"/api/videos/{currentVideo}.vtt")" kind="subtitles" srclang="es" label="Spanish">
+        <track src="@($"/api/videos/{currentVideo}.vtt")" kind="subtitles" srclang="es" label="Spanish" default>
         Your browser does not support the video tag.
     </video>
 }
