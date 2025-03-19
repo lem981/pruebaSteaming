@@ -3,7 +3,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 
-@if (videos is not null)
+@if (videos is not null && string.IsNullOrEmpty(currentVideo))
 {
     <ul>
         @foreach (var video in videos)
@@ -35,6 +35,7 @@
     public void PlayVideo(string url)
     {
         currentVideo = url;
+        videos = null;
         InvokeAsync(StateHasChanged);
     }
 
