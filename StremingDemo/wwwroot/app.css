@@ -72,6 +72,6 @@ h1:focus {
 
 video::cue {
     background: transparent; /* Removes the black background */
-    color: white; /* Sets the text color */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Adds shadow for visibility */
+    color: white; /* Keeps the default font size */
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9); /* Bigger & darker shadow */
 }
