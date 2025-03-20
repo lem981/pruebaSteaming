@@ -3,7 +3,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 
-@if (videos is not null && string.IsNullOrEmpty(currentVideo))
+@if (videos is not null )
 {
     <div class="row d-flex justify-content-center">
         @foreach (var video in videos)
@@ -11,7 +11,7 @@
             var uri = "Watch/" + video.Code;
             <div class="col-lg-2 col-md-4 col-sm-12 p-2">
                 <Card Class="mb-4 w-100">
-                    <img @onclick="() => Navigation.NavigateTo(uri)" class="clickable-element rounded-top img-fluid" src="@($"/api/videos/{video.Code}.jpg")" alt="placeholder" />
+                    <img @onclick="() => Navigation.NavigateTo(uri)" class="clickable-element rounded-top img-fixed" src="@($"/api/videos/{video.Code}.jpg")" alt="placeholder" />
                     <CardBody @onclick="() => Navigation.NavigateTo(uri)" class="text-center">
                         <CardTitle @onclick="() => Navigation.NavigateTo(uri)" class="clickable-element">@video.Code</CardTitle>
                         <Icon Name="IconName.PlayCircleFill" Size="IconSize.x3" Color="IconColor.Dark" @onclick="() => Navigation.NavigateTo(uri)" class="clickable-icon" />
@@ -22,27 +22,9 @@
     </div>
 }
 
-@if (!string.IsNullOrEmpty(currentVideo))
-{
-    <video controls Class="w-105">
-        <source src="@($"/api/videos/{currentVideo}.mp4")" type="video/mp4">
-        <track src="@($"/api/videos/{currentVideo}.vtt")" kind="subtitles" srclang="es" label="Spanish">
-        Your browser does not support the video tag.
-    </video>
-}
-
 
 @code {
 
-
-    public string currentVideo = string.Empty;
-
-    public void PlayVideo(string url)
-    {
-        currentVideo = url;
-        videos = null;
-        InvokeAsync(StateHasChanged);
-    }
 
     public List<Video> videos { get; set; }
 
