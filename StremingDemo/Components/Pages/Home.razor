@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using StremingDemo.Models
+@using System.Text.RegularExpressions
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 
@@ -51,12 +52,14 @@
 
     private string GetGroupKey(string code)
     {
-        // Podés ajustar esta lógica según el formato de tus nombres
-        int separatorIndex = code.IndexOfAny("_0123456789".ToCharArray());
-        if (separatorIndex > 0)
+        // Busca patrón como "The White Lotus S01 E03" → "The White Lotus S01"
+        var match = Regex.Match(code, @"^(.*?S\d{2})", RegexOptions.IgnoreCase);
+        if (match.Success)
         {
-            return code.Substring(0, separatorIndex);
+            return match.Groups[1].Value.Trim();
         }
-        return code;
+
+        // Si no encuentra temporada, intenta cortar al final de la primera palabra completa
+        return code.Split(" ").FirstOrDefault() ?? code;
     }
 }
