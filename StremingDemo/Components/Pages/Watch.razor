@@ -5,7 +5,7 @@
 
 @if (!string.IsNullOrEmpty(currentVideo))
 {
-    <video controls class="w-100" autoplay>
+    <video controls class="w-75" autoplay>
         <source src="@($"/api/videos/{currentVideo}.mp4")" type="video/mp4">
         <track src="@($"/api/videos/{currentVideo}.vtt")" kind="subtitles" srclang="es" label="Spanish" default>
         Your browser does not support the video tag.
