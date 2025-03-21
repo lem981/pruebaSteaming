@@ -5,9 +5,9 @@
 @inject NavigationManager Navigation
 
 <div class="netflix-container">
-    @if (videosByGroup?.Any() == true)
+    @if (seriesByGroup?.Any() == true)
     {
-        @foreach (var group in videosByGroup)
+        @foreach (var group in seriesByGroup)
         {
             <h2 class="section-title">@group.Key</h2>
             <div class="video-row">
@@ -24,11 +24,29 @@
             </div>
         }
     }
+
+    @if (movies?.Any() == true)
+    {
+        <h2 class="section-title">Top Picks for You</h2>
+        <div class="video-row">
+            @foreach (var movie in movies)
+            {
+                var uri = "Watch/" + movie.Code;
+                <div class="video-card" @onclick="() => Navigation.NavigateTo(uri)">
+                    <img src="@($"/api/videos/{movie.Code}.jpg")" alt="@movie.Code" class="video-thumbnail" />
+                    <div class="video-overlay">
+                        <span class="video-title">@movie.Code</span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
 
 @code {
     public List<Video> videos { get; set; }
-    public Dictionary<string, List<Video>> videosByGroup { get; set; }
+    public Dictionary<string, List<Video>> seriesByGroup { get; set; } = new();
+    public List<Video> movies { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,22 +62,35 @@
 
         videos = await httpClient.GetFromJsonAsync<List<Video>>("api/videos/list");
 
-        // Agrupar por prefijo (por ejemplo, antes del primer guión bajo o número)
-        videosByGroup = videos
-            .GroupBy(v => GetGroupKey(v.Code))
-            .ToDictionary(g => g.Key, g => g.ToList());
+        foreach (var video in videos)
+        {
+            var groupKey = GetSeriesGroupKey(video.Code);
+            if (string.IsNullOrEmpty(groupKey))
+            {
+                movies.Add(video);
+            }
+            else
+            {
+                if (!seriesByGroup.ContainsKey(groupKey))
+                {
+                    seriesByGroup[groupKey] = new List<Video>();
+                }
+                seriesByGroup[groupKey].Add(video);
+            }
+        }
     }
 
-    private string GetGroupKey(string code)
+    private string GetSeriesGroupKey(string code)
     {
-        // Busca patrón como "The White Lotus S01 E03" → "The White Lotus S01"
-        var match = Regex.Match(code, @"^(.*?S\d{2})", RegexOptions.IgnoreCase);
+        // Detecta "S01 E03" o similar y devuelve "The White Lotus S01"
+        var match = 
+        Regex.Match(code, @"^(.*?\bS\d{2})\b", RegexOptions.IgnoreCase);
         if (match.Success)
         {
             return match.Groups[1].Value.Trim();
         }
 
-        // Si no encuentra temporada, intenta cortar al final de la primera palabra completa
-        return code.Split(" ").FirstOrDefault() ?? code;
+        // Si no es una serie, retornar null para considerarlo película
+        return null;
     }
 }
