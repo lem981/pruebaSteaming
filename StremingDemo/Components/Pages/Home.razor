@@ -3,40 +3,39 @@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 
-@if (videos is not null )
-{
-    <div class="row d-flex justify-content-center">
-        @foreach (var video in videos)
+<div class="netflix-container">
+    @if (videosByGroup?.Any() == true)
+    {
+        @foreach (var group in videosByGroup)
         {
-            var uri = "Watch/" + video.Code;
-            <div class="col-lg-2 col-md-4 col-sm-12 p-2">
-                <Card Class="mb-4 w-100">
-                    <img @onclick="() => Navigation.NavigateTo(uri)" class="clickable-element rounded-top img-fixed" src="@($"/api/videos/{video.Code}.jpg")" alt="placeholder" />
-                    <CardBody @onclick="() => Navigation.NavigateTo(uri)" class="text-center">
-                        <CardTitle @onclick="() => Navigation.NavigateTo(uri)" class="clickable-element">@video.Code</CardTitle>
-                        <Icon Name="IconName.PlayCircleFill" Size="IconSize.x3" Color="IconColor.Dark" @onclick="() => Navigation.NavigateTo(uri)" class="clickable-icon" />
-                    </CardBody>
-                </Card>
+            <h2 class="section-title">@group.Key</h2>
+            <div class="video-row">
+                @foreach (var video in group.Value)
+                {
+                    var uri = "Watch/" + video.Code;
+                    <div class="video-card" @onclick="() => Navigation.NavigateTo(uri)">
+                        <img src="@($"/api/videos/{video.Code}.jpg")" alt="@video.Code" class="video-thumbnail" />
+                        <div class="video-overlay">
+                            <span class="video-title">@video.Code</span>
+                        </div>
+                    </div>
+                }
             </div>
         }
-    </div>
-}
-
+    }
+</div>
 
 @code {
-
-
     public List<Video> videos { get; set; }
+    public Dictionary<string, List<Video>> videosByGroup { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        // Ignore SSL certificate validation
         var handler = new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
             };
 
-        // Create HttpClient with custom handler
         var httpClient = new HttpClient(handler)
             {
                 BaseAddress = new Uri(Navigation.BaseUri)
@@ -44,7 +43,20 @@
 
         videos = await httpClient.GetFromJsonAsync<List<Video>>("api/videos/list");
 
-
+        // Agrupar por prefijo (por ejemplo, antes del primer guión bajo o número)
+        videosByGroup = videos
+            .GroupBy(v => GetGroupKey(v.Code))
+            .ToDictionary(g => g.Key, g => g.ToList());
     }
 
+    private string GetGroupKey(string code)
+    {
+        // Podés ajustar esta lógica según el formato de tus nombres
+        int separatorIndex = code.IndexOfAny("_0123456789".ToCharArray());
+        if (separatorIndex > 0)
+        {
+            return code.Substring(0, separatorIndex);
+        }
+        return code;
+    }
 }
