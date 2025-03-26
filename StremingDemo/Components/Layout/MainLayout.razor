@@ -13,3 +13,20 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+<script>
+    let hideTimeout;
+
+    window.videoInactivity = {
+        resetTimer: () => {
+            const btn = document.getElementById("back-button");
+            if (btn) {
+                btn.classList.remove("hidden");
+                clearTimeout(hideTimeout);
+                hideTimeout = setTimeout(() => {
+                    btn.classList.add("hidden");
+                }, 500);
+            }
+        }
+    };
+</script>

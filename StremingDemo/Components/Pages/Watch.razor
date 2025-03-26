@@ -1,15 +1,51 @@
 ﻿@page "/watch/{movieName}"
+@rendermode InteractiveServer
 @attribute [StreamRendering]
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<style>
+    .video-wrapper {
+        position: relative;
+    }
+
+    .floating-back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 2;
+        padding: 10px 16px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+        .floating-back-button.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+</style>
 
 <PageTitle>Watching @movieName</PageTitle>
 
 @if (!string.IsNullOrEmpty(currentVideo))
 {
-    <video controls class="w-75" playsinline autoplay>
-        <source src="@($"/api/videos/{currentVideo}.mp4")" type="video/mp4">
-        <track src="@($"/api/videos/{currentVideo}.vtt")" kind="subtitles" srclang="es" label="Spanish" default>
-        Your browser does not support the video tag.
-    </video>
+    <div id="video-container" class="video-wrapper" @onmousemove="HandleMouseMove">
+        <video id="main-video" controls class="w-100" playsinline autoplay>
+            <source src="@($"/api/videos/{currentVideo}.mp4")" type="video/mp4">
+            <track src="@($"/api/videos/{currentVideo}.vtt")" kind="subtitles" srclang="es" label="Spanish" default>
+            Your browser does not support the video tag.
+        </video>
+
+        <button id="back-button" class="floating-back-button" @onclick="GoBack">
+            <Icon Name="IconName.ArrowLeftCircleFill" Size="IconSize.x2" />
+        </button>
+    </div>
 }
 else
 {
@@ -28,5 +64,14 @@ else
         {
             currentVideo = movieName;
         }
+    }
+    private async Task HandleMouseMove()
+    {
+        await JS.InvokeVoidAsync("videoInactivity.resetTimer");
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/", forceLoad: true);
     }
 }
